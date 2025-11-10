@@ -12,7 +12,17 @@ A Telegram bot for managing conference registrations with payment verification t
 - ✅ Admin approval/rejection workflow
 - ✅ Automated ticket generation
 
-## Prerequisites
+## 🌐 Deployment Options
+
+**Want to deploy this bot online 24/7?**
+
+👉 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for detailed guides on:
+- Railway.app (Easiest - $5/month free credit)
+- Render.com (Free tier)
+- Fly.io (Good free tier)
+- Oracle Cloud (Free forever)
+
+## Prerequisites (For Local Development)
 
 - Node.js (v14 or higher)
 - A Telegram Bot Token (from [@BotFather](https://t.me/botfather))
