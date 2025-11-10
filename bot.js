@@ -43,11 +43,11 @@ bot.start((ctx) => {
   userStates[userId] = { step: 'start' };
 
   ctx.reply(
-    '🎓 Welcome to the Conference Booking Bot!\n\n' +
-    'To register for the conference, I need your contact information.\n\n' +
-    'Please share your contact using the button below:',
+    '🎓 Добро пожаловать в бота регистрации на конференцию!\n\n' +
+    'Чтобы зарегистрироваться, мне нужны ваши контактные данные.\n\n' +
+    'Пожалуйста, поделитесь контактом с помощью кнопки ниже:',
     Markup.keyboard([
-      Markup.button.contactRequest('📱 Share Contact')
+      Markup.button.contactRequest('📱 Поделиться контактом')
     ]).resize()
   );
 });
@@ -59,7 +59,7 @@ bot.on('contact', async (ctx) => {
 
   // Check if user shared their own contact
   if (contact.user_id !== userId) {
-    return ctx.reply('❌ Please share your own contact information.');
+    return ctx.reply('❌ Пожалуйста, поделитесь собственными контактными данными.');
   }
 
   const firstName = contact.first_name || '';
@@ -75,25 +75,25 @@ bot.on('contact', async (ctx) => {
   };
 
   await ctx.reply(
-    '✅ Contact received!\n\n' +
-    `📋 Your Information:\n` +
-    `Name: ${firstName} ${lastName}\n` +
-    `Phone: ${phoneNumber}\n\n` +
-    'Is this information correct?',
+    '✅ Контакт получен!\n\n' +
+    `📋 Ваши данные:\n` +
+    `Имя и Фамилия: ${firstName} ${lastName}\n` +
+    `Телефон: ${phoneNumber}\n\n` +
+    'Все верно?',
     Markup.keyboard([
-      ['✅ Yes, Correct'],
-      ['✏️ Edit Name', '✏️ Edit Phone']
+      ['✅ Да, верно'],
+      ['✏️ Изменить имя', '✏️ Изменить телефон']
     ]).resize()
   );
 });
 
 // Handle confirmation and editing
-bot.hears('✅ Yes, Correct', async (ctx) => {
+bot.hears('✅ Да, верно', async (ctx) => {
   const userId = ctx.from.id;
   const state = userStates[userId];
 
   if (!state || state.step !== 'confirm_info') {
-    return ctx.reply('❌ Please start with /start command first.');
+    return ctx.reply('❌ Пожалуйста, сначала начните командой /start.');
   }
 
   // Generate conference ID
@@ -118,33 +118,33 @@ bot.hears('✅ Yes, Correct', async (ctx) => {
   };
 
   await ctx.reply(
-    '✅ Registration successful!\n\n' +
-    `🎫 Your Conference ID: ${conferenceId}\n\n` +
-    '💳 Payment Instructions:\n\n' +
-    '1️⃣ Open the Payme app\n' +
-    '2️⃣ Search for "Oxbridge international school"\n' +
-    '3️⃣ Fill in the payment form:\n' +
-    `   • Field 1: ${state.firstName} ${state.lastName}\n` +
-    `   • Field 2: ${conferenceId}\n` +
-    `   • Field 3: 200,000 sum\n\n` +
-    '4️⃣ Complete the payment\n' +
-    '5️⃣ Take a screenshot of the payment confirmation\n' +
-    '6️⃣ Send the screenshot back to this bot\n\n' +
-    '📸 Please send your payment screenshot now:',
+    '✅ Регистрация прошла успешно!\n\n' +
+    `🎫 Ваш идентификатор конференции: ${conferenceId}\n\n` +
+    '💳 Инструкции по оплате:\n\n' +
+    '1️⃣ Откройте приложение Payme или Click\n' +
+    '2️⃣ Найдите «Oxbridge international school»\n' +
+    '3️⃣ Заполните форму оплаты:\n' +
+    `   • ФИО: ${state.firstName} ${state.lastName}\n` +
+    `   • Номер Договора: ${conferenceId}\n` +
+    `   • Сумма: 200 000 сум\n\n` +
+    '4️⃣ Завершите оплату\n' +
+    '5️⃣ Сделайте скриншот подтверждения оплаты\n' +
+    '6️⃣ Отправьте скриншот этому боту\n\n' +
+    '📸 Пожалуйста, отправьте сейчас скриншот оплаты:',
     Markup.removeKeyboard()
   );
 });
 
-bot.hears('✏️ Edit Name', (ctx) => {
+bot.hears('✏️ Изменить имя', (ctx) => {
   const userId = ctx.from.id;
   userStates[userId].step = 'edit_name';
-  ctx.reply('Please enter your full name (First Name Last Name):', Markup.removeKeyboard());
+  ctx.reply('Введите ваше полное имя (Имя Фамилия):', Markup.removeKeyboard());
 });
 
-bot.hears('✏️ Edit Phone', (ctx) => {
+bot.hears('✏️ Изменить телефон', (ctx) => {
   const userId = ctx.from.id;
   userStates[userId].step = 'edit_phone';
-  ctx.reply('Please enter your phone number:', Markup.removeKeyboard());
+  ctx.reply('Введите ваш номер телефона:', Markup.removeKeyboard());
 });
 
 // Handle text input for editing
@@ -161,14 +161,14 @@ bot.on('text', async (ctx) => {
     state.step = 'confirm_info';
 
     await ctx.reply(
-      '✅ Name updated!\n\n' +
-      `📋 Your Information:\n` +
-      `Name: ${state.firstName} ${state.lastName}\n` +
-      `Phone: ${state.phoneNumber}\n\n` +
-      'Is this information correct?',
+      '✅ Имя обновлено!\n\n' +
+      `📋 Ваши данные:\n` +
+      `Имя: ${state.firstName} ${state.lastName}\n` +
+      `Телефон: ${state.phoneNumber}\n\n` +
+      'Все верно?',
       Markup.keyboard([
-        ['✅ Yes, Correct'],
-        ['✏️ Edit Name', '✏️ Edit Phone']
+        ['✅ Да, верно'],
+        ['✏️ Изменить имя', '✏️ Изменить телефон']
       ]).resize()
     );
   } else if (state.step === 'edit_phone') {
@@ -176,14 +176,14 @@ bot.on('text', async (ctx) => {
     state.step = 'confirm_info';
 
     await ctx.reply(
-      '✅ Phone updated!\n\n' +
-      `📋 Your Information:\n` +
-      `Name: ${state.firstName} ${state.lastName}\n` +
-      `Phone: ${state.phoneNumber}\n\n` +
-      'Is this information correct?',
+      '✅ Телефон обновлен!\n\n' +
+      `📋 Ваши данные:\n` +
+      `Имя: ${state.firstName} ${state.lastName}\n` +
+      `Телефон: ${state.phoneNumber}\n\n` +
+      'Все верно?',
       Markup.keyboard([
-        ['✅ Yes, Correct'],
-        ['✏️ Edit Name', '✏️ Edit Phone']
+        ['✅ Да, верно'],
+        ['✏️ Изменить имя', '✏️ Изменить телефон']
       ]).resize()
     );
   }
@@ -196,11 +196,11 @@ bot.on('photo', async (ctx) => {
   const user = db.users[userId];
 
   if (!user) {
-    return ctx.reply('❌ Please register first using /start command.');
+    return ctx.reply('❌ Пожалуйста, сначала зарегистрируйтесь через команду /start.');
   }
 
   if (user.status !== 'pending_payment') {
-    return ctx.reply('❌ You have already submitted a payment screenshot.');
+    return ctx.reply('❌ Вы уже отправили скриншот оплаты.');
   }
 
   // Get the largest photo
@@ -212,29 +212,29 @@ bot.on('photo', async (ctx) => {
   user.submittedAt = new Date().toISOString();
   writeDatabase(db);
 
-  await ctx.reply('✅ Screenshot received! Please wait while an admin reviews your payment...');
+  await ctx.reply('✅ Скриншот получен! Пожалуйста, подождите, пока администратор проверит вашу оплату...');
 
   // Forward to admin
   try {
     await ctx.telegram.sendPhoto(ADMIN_ID, photo.file_id, {
       caption:
-        '🔔 New Payment Confirmation Request\n\n' +
-        `👤 User: ${user.firstName} ${user.lastName}\n` +
-        `📞 Phone: ${user.phoneNumber}\n` +
-        `🎫 Conference ID: ${user.conferenceId}\n` +
-        `💰 Amount: 200,000 sum\n` +
-        `📅 Submitted: ${new Date(user.submittedAt).toLocaleString()}\n\n` +
-        `User ID: ${userId}`,
+        '🔔 Новый запрос на подтверждение оплаты\n\n' +
+        `👤 Пользователь: ${user.firstName} ${user.lastName}\n` +
+        `📞 Телефон: ${user.phoneNumber}\n` +
+        `🎫 ID Платежа: ${user.conferenceId}\n` +
+        `💰 Сумма: 200 000 сум\n` +
+        `📅 Отправлено: ${new Date(user.submittedAt).toLocaleString()}\n\n` +
+        `ID пользователя: ${userId}`,
       ...Markup.inlineKeyboard([
         [
-          Markup.button.callback('✅ Approve', `approve_${userId}`),
-          Markup.button.callback('❌ Reject', `reject_${userId}`)
+          Markup.button.callback('✅ Подтвердить', `approve_${userId}`),
+          Markup.button.callback('❌ Отклонить', `reject_${userId}`)
         ]
       ])
     });
   } catch (error) {
     console.error('Error sending to admin:', error);
-    ctx.reply('⚠️ Error notifying admin. Please contact support.');
+    ctx.reply('⚠️ Не удалось уведомить администратора. Пожалуйста, свяжитесь с поддержкой.');
   }
 });
 
@@ -245,7 +245,7 @@ bot.action(/approve_(\d+)/, async (ctx) => {
   const user = db.users[userId];
 
   if (!user) {
-    return ctx.answerCbQuery('❌ User not found');
+    return ctx.answerCbQuery('❌ Пользователь не найден');
   }
 
   // Update user status
@@ -253,9 +253,9 @@ bot.action(/approve_(\d+)/, async (ctx) => {
   user.confirmedAt = new Date().toISOString();
   writeDatabase(db);
 
-  await ctx.answerCbQuery('✅ Payment approved!');
+  await ctx.answerCbQuery('✅ Оплата подтверждена!');
   await ctx.editMessageCaption(
-    ctx.callbackQuery.message.caption + '\n\n✅ APPROVED',
+    ctx.callbackQuery.message.caption + '\n\n✅ ПОДТВЕРЖДЕНО',
     { reply_markup: undefined }
   );
 
@@ -263,20 +263,20 @@ bot.action(/approve_(\d+)/, async (ctx) => {
   try {
     await ctx.telegram.sendMessage(
       userId,
-      '🎉 Congratulations!\n\n' +
-      '✅ Your payment has been confirmed!\n\n' +
+      '🎉 Поздравляем!\n\n' +
+      '✅ Ваша оплата подтверждена!\n\n' +
       '━━━━━━━━━━━━━━━━━━━━\n' +
-      '🎫 CONFERENCE TICKET\n' +
+      '🎫 БИЛЕТ НА КОНФЕРЕНЦИЮ\n' +
       '━━━━━━━━━━━━━━━━━━━━\n\n' +
-      `👤 Name: ${user.firstName} ${user.lastName}\n` +
-      `📞 Phone: ${user.phoneNumber}\n` +
+      `👤 Имя: ${user.firstName} ${user.lastName}\n` +
+      `📞 Телефон: ${user.phoneNumber}\n` +
       `🎫 ID: ${user.conferenceId}\n` +
-      `💰 Amount Paid: 200,000 sum\n` +
-      `📅 Confirmed: ${new Date(user.confirmedAt).toLocaleString()}\n\n` +
+      `💰 Оплачено: 200 000 сум\n` +
+      `📅 Подтверждено: ${new Date(user.confirmedAt).toLocaleString()}\n\n` +
       '━━━━━━━━━━━━━━━━━━━━\n\n' +
-      '✨ Thank you for registering!\n' +
-      'Please save this message as your ticket.\n\n' +
-      'See you at the conference! 🎓'
+      '✨ Спасибо за регистрацию!\n' +
+      'Сохраните это сообщение как ваш билет.\n\n' +
+      'До встречи на конференции! 🎓'
     );
   } catch (error) {
     console.error('Error sending confirmation to user:', error);
@@ -290,7 +290,7 @@ bot.action(/reject_(\d+)/, async (ctx) => {
   const user = db.users[userId];
 
   if (!user) {
-    return ctx.answerCbQuery('❌ User not found');
+    return ctx.answerCbQuery('❌ Пользователь не найден');
   }
 
   // Reset user status
@@ -298,9 +298,9 @@ bot.action(/reject_(\d+)/, async (ctx) => {
   delete user.screenshotFileId;
   writeDatabase(db);
 
-  await ctx.answerCbQuery('❌ Payment rejected');
+  await ctx.answerCbQuery('❌ Оплата отклонена');
   await ctx.editMessageCaption(
-    ctx.callbackQuery.message.caption + '\n\n❌ REJECTED',
+    ctx.callbackQuery.message.caption + '\n\n❌ ОТКЛОНЕНО',
     { reply_markup: undefined }
   );
 
@@ -308,14 +308,14 @@ bot.action(/reject_(\d+)/, async (ctx) => {
   try {
     await ctx.telegram.sendMessage(
       userId,
-      '❌ Your payment could not be verified.\n\n' +
-      'Please check your payment details and submit a new screenshot.\n' +
-      'Make sure the screenshot clearly shows:\n' +
-      '• Payment to "Oxbridge international school"\n' +
-      `• Your name: ${user.firstName} ${user.lastName}\n` +
-      `• Conference ID: ${user.conferenceId}\n` +
-      '• Amount: 200,000 sum\n\n' +
-      '📸 Please send a new screenshot.'
+      '❌ Не удалось подтвердить вашу оплату.\n\n' +
+      'Проверьте данные платежа и отправьте новый скриншот.\n' +
+      'Убедитесь, что на скриншоте видно:\n' +
+      '• Платеж на «Oxbridge international school»\n' +
+      `• Ваше имя: ${user.firstName} ${user.lastName}\n` +
+      `• ID конференции: ${user.conferenceId}\n` +
+      '• Сумма: 200 000 сум\n\n' +
+      '📸 Пожалуйста, отправьте новый скриншот.'
     );
   } catch (error) {
     console.error('Error sending rejection to user:', error);
@@ -325,26 +325,26 @@ bot.action(/reject_(\d+)/, async (ctx) => {
 // Help command
 bot.help((ctx) => {
   ctx.reply(
-    '📖 Conference Booking Bot Help\n\n' +
-    'Commands:\n' +
-    '/start - Start registration\n' +
-    '/help - Show this help message\n\n' +
-    'Steps:\n' +
-    '1️⃣ Share your contact information\n' +
-    '2️⃣ Confirm your details\n' +
-    '3️⃣ Get your conference ID\n' +
-    '4️⃣ Make payment via Payme\n' +
-    '5️⃣ Send payment screenshot\n' +
-    '6️⃣ Wait for admin confirmation\n' +
-    '7️⃣ Receive your ticket\n\n' +
-    'Need help? Contact the admin.'
+    '📖 Помощь бота регистрации на конференцию\n\n' +
+    'Команды:\n' +
+    '/start — начать регистрацию\n' +
+    '/help — показать эту справку\n\n' +
+    'Шаги:\n' +
+    '1️⃣ Поделитесь контактными данными\n' +
+    '2️⃣ Подтвердите свои данные\n' +
+    '3️⃣ Получите свой ID конференции\n' +
+    '4️⃣ Оплатите через Payme\n' +
+    '5️⃣ Отправьте скриншот оплаты\n' +
+    '6️⃣ Дождитесь подтверждения администратора\n' +
+    '7️⃣ Получите билет\n\n' +
+    'Нужна помощь? Свяжитесь с администратором.'
   );
 });
 
 // Error handler
 bot.catch((err, ctx) => {
   console.error('Bot error:', err);
-  ctx.reply('❌ An error occurred. Please try again or contact support.');
+  ctx.reply('❌ Произошла ошибка. Попробуйте снова или свяжитесь с поддержкой.');
 });
 
 // Initialize and launch
